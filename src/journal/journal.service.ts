@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateJournalEntryDto } from './dto/create-journal.dto';
+import { SortOrder } from './dto/list-journal.dto';
 
 @Injectable()
 export class JournalService {
@@ -14,6 +15,17 @@ export class JournalService {
         mood_rating,
         entry_text,
         user_id: userId,
+      },
+    });
+  }
+
+  findAllByUserId(userId: string, sort: SortOrder) {
+    return this.prisma.journal_entries.findMany({
+      where: {
+        user_id: userId,
+      },
+      orderBy: {
+        created_at: sort,
       },
     });
   }
