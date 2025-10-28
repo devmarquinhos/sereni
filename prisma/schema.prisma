@@ -60,6 +60,7 @@ model users {
   password_hash   String
   name            String?
   created_at      DateTime          @default(now()) @db.Timestamptz(6)
+  role            user_role         @default(USER)
   journal_entries journal_entries[]
   user_progress   user_progress[]
 }
@@ -74,4 +75,9 @@ enum lesson_step_type {
 enum module_type {
   FOR_USER
   FOR_SUPPORTER
+}
+
+enum user_role {
+  USER
+  ADMIN
 }
