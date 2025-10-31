@@ -130,4 +130,4 @@ Aqui está um resumo das rotas disponíveis na API.
 
 ## 📜 Licença
 
-Este projeto não possui uma licença aberta (UNLICENSED).
+Este projeto possui a licença MIT.
