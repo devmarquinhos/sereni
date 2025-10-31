@@ -12,7 +12,7 @@
 
 ## 📝 Descrição
 
-**Sereni API** é o serviço de backend para o aplicativo de saúde mental "Sereni". Este projeto, desenvolvido como parte da matéria de Projeto Integrador 2, tem como objetivo fornecer uma API robusta, segura e escalável para gerenciar usuários, seus registros de diário e o conteúdo educacional da plataforma.
+**Sereni API** é um serviço de backend para o aplicativo de saúde mental "Sereni". Este projeto, desenvolvido como parte da matéria de Projeto Integrador 2, tem como objetivo fornecer uma API robusta, segura e escalável para gerenciar usuários, seus registros de diário e o conteúdo educacional da plataforma.
 
 A aplicação se divide em duas frentes:
 
