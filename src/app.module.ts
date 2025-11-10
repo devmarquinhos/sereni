@@ -6,6 +6,7 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { HealthModule } from './health/health.module';
 import { JournalModule } from './journal/journal.module';
 import { ContentModule } from './content/content.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ContentModule } from './content/content.module';
     HealthModule,
     JournalModule,
     ContentModule,
+    ProgressModule,
   ],
   controllers: [AppController],
   providers: [AppService],

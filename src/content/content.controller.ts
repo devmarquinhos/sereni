@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ContentService } from './content.service';
 import { GetModulesQueryDto } from './dto/get-modules-query.dto';
-import { CreateModuleDto } from './dto/create-module.dto'; // Importe o DTO
-import { Roles } from '../common/decorators/roles.decorator'; // Importe o Decorator
-import { RolesGuard } from '../common/guards/roles.guards'; // Importe o Guard
+import { CreateModuleDto } from './dto/create-module.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guards';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('content')
