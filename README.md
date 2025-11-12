@@ -1,98 +1,133 @@
+# Sereni API
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <img src="https://img.shields.io/badge/NestJS-Framework-red?style=for-the-badge&logo=nestjs" alt="NestJS">
+  <img src="https://img.shields.io/badge/TypeScript-Language-blue?style=for-the-badge&logo=typescript" alt="TypeScript">
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-blue?style=for-the-badge&logo=postgresql" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Prisma-ORM-darkgreen?style=for-the-badge&logo=prisma" alt="Prisma">
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## 📝 Descrição
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**Sereni API** é um serviço de backend para o aplicativo de saúde mental "Sereni". Este projeto, desenvolvido como parte da matéria de Projeto Integrador 2, tem como objetivo fornecer uma API robusta, segura e escalável para gerenciar usuários, seus registros de diário e o conteúdo educacional da plataforma.
 
-## Project setup
+A aplicação se divide em duas frentes:
 
-```bash
-$ npm install
-```
+1.  **Apoio ao Usuário:** Fornece ferramentas para que o usuário possa gerenciar sua ansiedade através de um diário de emoções e lições interativas (`FOR_USER`).
+2.  **Rede de Apoio:** Oferece conteúdo educacional para amigos e familiares (`FOR_SUPPORTER`) sobre como lidar e ajudar pessoas em crise.
 
-## Compile and run the project
+O sistema conta com autenticação baseada em JWT e um sistema de papéis (RBAC) para diferenciar usuários comuns de administradores de conteúdo.
 
-```bash
-# development
-$ npm run start
+## ✨ Principais Funcionalidades
 
-# watch mode
-$ npm run start:dev
+  * **Autenticação Segura:** Sistema completo de registro (`POST /auth/register`) e login (`POST /auth/login`) com senhas criptografadas (bcrypt) e tokens de acesso (JWT).
+  * **Controle de Acesso (RBAC):** Sistema de papéis (`USER` e `ADMIN`) que protege endpoints sensíveis, garantindo que apenas administradores possam criar conteúdo.
+  * **Módulo de Diário:** Endpoints para que usuários criem (`POST /journal`) e listem (`GET /journal`) suas entradas de diário de forma privada e segura.
+  * **Módulo de Conteúdo (Admin):** Endpoint de administração (`POST /content/modules`) para criar novos módulos de aprendizado.
+  * **Módulo de Conteúdo (Usuário):** Endpoint para o aplicativo consumir os módulos de conteúdo (`GET /content/modules`), com filtros por tipo.
+  * **Health Check:** Endpoints de monitoramento (`/health/live` e `/health/ready`) para verificar o status do serviço e sua conexão com o banco de dados.
 
-# production mode
-$ npm run start:prod
-```
+## 🛠️ Stack de Tecnologias
 
-## Run tests
+  * **Framework:** **NestJS**
+  * **Linguagem:** **TypeScript**
+  * **Banco de Dados:** **PostgreSQL**
+  * **ORM:** **Prisma**
+  * **Autenticação:** **Passport** com estratégia **JWT**
+  * **Validação:** **class-validator** e **class-transformer**
 
-```bash
-# unit tests
-$ npm run test
+## 🚀 Setup
 
-# e2e tests
-$ npm run test:e2e
+Para rodar este projeto localmente, você precisará ter o [Node.js (\>= 18)](https://nodejs.org/), `npm` (ou `yarn`) e uma instância do **PostgreSQL** rodando na sua máquina.
 
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Instalação
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# 1. Clone o repositório
+git clone https://github.com/seu-usuario/sereni-api.git
+
+# 2. Entre na pasta do projeto
+cd sereni-api
+
+# 3. Instale as dependências
+npm install
+
+# 4. (Recomendado) Instale o módulo de configuração do NestJS
+npm install @nestjs/config
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Configuração do Ambiente
 
-## Resources
+O projeto usa variáveis de ambiente para configurar o banco de dados e a segurança.
 
-Check out a few resources that may come in handy when working with NestJS:
+1.  Crie um arquivo `.env` na raiz do projeto.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+2.  Copie e cole o conteúdo abaixo, substituindo com suas credenciais:
 
-## Support
+    ```.env
+    # URL de conexão do seu banco de dados PostgreSQL
+    DATABASE_URL="postgresql://SEU_USUARIO:SUA_SENHA@localhost:5432/sereni_db?schema=public"
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+    # Chave secreta longa e aleatória para assinar os tokens JWT
+    JWT_SECRET="COLOQUE_UM_SEGREDO_FORTE_AQUI"
 
-## Stay in touch
+    # Porta em que o servidor irá rodar
+    PORT=3000
+    ```
+    
+### Sobre o Banco de Dados
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Com seu arquivo `.env` configurado, aplique o schema do Prisma no seu banco de dados PostgreSQL.
 
-## License
+```bash
+# Este comando irá ler o schema.prisma e criar todas as tabelas e tipos
+npx prisma migrate dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Criar um Usuário Admin
+
+O sistema de RBAC requer um usuário `ADMIN` para criar conteúdo.
+
+1.  Cadastre um novo usuário normalmente via `POST /auth/register`.
+2.  Abra seu cliente de banco de dados (DBeaver, Postico, etc.).
+3.  Execute o seguinte comando SQL para promover seu usuário:
+    ```sql
+    UPDATE "users"
+    SET "role" = 'ADMIN'
+    WHERE "email" = 'seu-email-de-admin@exemplo.com';
+    ```
+
+## 🏃‍♀️ Rodando a Aplicação
+
+```bash
+# Modo de desenvolvimento (com hot-reload)
+npm run start:dev
+
+# Modo de produção
+npm run build
+npm run start:prod
+```
+
+Seu servidor estará disponível em `http://localhost:3000`.
+
+## 🧱 Endpoints da API
+
+Aqui está um resumo das rotas disponíveis na API.
+
+| Rota | Método HTTP | Protegido? | Role | Descrição |
+| :--- | :--- | :--- | :--- | :--- |
+| `/health/live` | `GET` | Não | - | Verifica se o serviço está rodando. |
+| `/health/ready` | `GET` | Não | - | Verifica a conexão com o banco de dados. |
+| `/auth/register` | `POST` | Não | - | Registra um novo usuário (padrão: `USER`). |
+| `/auth/login` | `POST` | Não | - | Autentica um usuário e retorna um JWT. |
+| `/journal` | `POST` | **Sim** | `USER` | Cria uma nova entrada no diário para o usuário logado. |
+| `/journal` | `GET` | **Sim** | `USER` | Lista todas as entradas do diário do usuário logado (Query: `?sort=asc|desc`). |
+| `/content/modules` | `GET` | **Sim** | `USER`/`ADMIN` | Lista os módulos de conteúdo (Query: `?type=FOR_USER|FOR_SUPPORTER`). |
+| `/content/modules` | `POST` | **Sim** | `ADMIN` | **[ADMIN]** Cria um novo módulo de conteúdo. |
+
+## 📜 Licença
+
+Este projeto possui a licença MIT.
