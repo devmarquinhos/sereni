@@ -25,6 +25,40 @@ export class ContentService {
     });
   }
 
+  async findLessonsByModuleId(moduleId: number) {
+    const moduleExists = await this.prisma.modules.findUnique({
+      where: { id: moduleId },
+    });
+
+    if (!moduleExists) {
+      throw new Error(`Módulo com ID ${moduleId} não encontrado.`);
+    }
+
+    return this.prisma.lessons.findMany({
+      where: { module_id: moduleId },
+      orderBy: {
+        id: 'asc',
+      },
+    });
+  }
+
+  async findStepsByLessonId(lessonId: number) {
+    const lessonExists = await this.prisma.lessons.findUnique({
+      where: { id: lessonId },
+    });
+
+    if (!lessonExists) {
+      throw new Error(`Lição com ID ${lessonId} não encontrada.`);
+    }
+
+    return this.prisma.lesson_steps.findMany({
+      where: { lesson_id: lessonId },
+      orderBy: {
+        order: 'asc',
+      },
+    });
+  }
+
   async createStep(createStepDto: CreateStepDto) {
     const { lesson_id, step_type, content, order } = createStepDto;
 
