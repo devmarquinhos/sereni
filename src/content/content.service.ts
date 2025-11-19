@@ -101,17 +101,6 @@ export class ContentService {
       },
     });
 
-    return steps.map((step) => {
-      if (step.step_type === 'MULTIPLE_CHOICE') {
-        const content: { correct_answer_index?: number } = step.content as any;
-
-        if ('correct_answer_index' in content) {
-          delete content.correct_answer_index;
-        }
-
-        return { ...step, content };
-      }
-      return step;
-    });
+    return steps;
   }
 }

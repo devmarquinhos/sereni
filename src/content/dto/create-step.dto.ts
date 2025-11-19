@@ -1,14 +1,5 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsObject,
-  ValidateNested,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsObject } from 'class-validator';
 import { lesson_step_type } from '@prisma/client';
-import { Type } from 'class-transformer';
-
-class ContentDto {}
 
 export class CreateStepDto {
   @IsNumber()
@@ -21,8 +12,6 @@ export class CreateStepDto {
 
   @IsObject()
   @IsNotEmpty()
-  @ValidateNested()
-  @Type(() => ContentDto)
   content: object;
 
   @IsNumber()
