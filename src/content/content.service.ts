@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { module_type } from '@prisma/client';
 import { CreateModuleDto } from './dto/create-module.dto';
+import { CreateLessonDto } from './dto/create-lesson.dto';
 import { CreateStepDto } from './dto/create-step.dto';
 
 @Injectable()
@@ -25,36 +27,22 @@ export class ContentService {
     });
   }
 
-  async findLessonsByModuleId(moduleId: number) {
+  async createLesson(createLessonDto: CreateLessonDto) {
+    const { title, order, module_id } = createLessonDto;
+
     const moduleExists = await this.prisma.modules.findUnique({
-      where: { id: moduleId },
+      where: { id: module_id },
     });
 
     if (!moduleExists) {
-      throw new Error(`Módulo com ID ${moduleId} não encontrado.`);
+      throw new NotFoundException(`Módulo com ID ${module_id} não encontrado.`);
     }
 
-    return this.prisma.lessons.findMany({
-      where: { module_id: moduleId },
-      orderBy: {
-        id: 'asc',
-      },
-    });
-  }
-
-  async findStepsByLessonId(lessonId: number) {
-    const lessonExists = await this.prisma.lessons.findUnique({
-      where: { id: lessonId },
-    });
-
-    if (!lessonExists) {
-      throw new Error(`Lição com ID ${lessonId} não encontrada.`);
-    }
-
-    return this.prisma.lesson_steps.findMany({
-      where: { lesson_id: lessonId },
-      orderBy: {
-        order: 'asc',
+    return this.prisma.lessons.create({
+      data: {
+        title,
+        order,
+        module_id,
       },
     });
   }
@@ -67,7 +55,7 @@ export class ContentService {
     });
 
     if (!lessonExists) {
-      throw new Error(`Lição com ID ${lesson_id} não encontrada.`);
+      throw new NotFoundException(`Lição com ID ${lesson_id} não encontrada.`);
     }
 
     return this.prisma.lesson_steps.create({
@@ -77,6 +65,53 @@ export class ContentService {
         content,
         order,
       },
+    });
+  }
+
+  async findLessonsByModuleId(moduleId: number) {
+    const moduleExists = await this.prisma.modules.findUnique({
+      where: { id: moduleId },
+    });
+
+    if (!moduleExists) {
+      throw new NotFoundException(`Módulo com ID ${moduleId} não encontrado.`);
+    }
+
+    return this.prisma.lessons.findMany({
+      where: { module_id: moduleId },
+      orderBy: {
+        order: 'asc',
+      },
+    });
+  }
+
+  async findStepsByLessonId(lessonId: number) {
+    const lessonExists = await this.prisma.lessons.findUnique({
+      where: { id: lessonId },
+    });
+
+    if (!lessonExists) {
+      throw new NotFoundException(`Lição com ID ${lessonId} não encontrada.`);
+    }
+
+    const steps = await this.prisma.lesson_steps.findMany({
+      where: { lesson_id: lessonId },
+      orderBy: {
+        order: 'asc',
+      },
+    });
+
+    return steps.map((step) => {
+      if (step.step_type === 'MULTIPLE_CHOICE') {
+        const content: { correct_answer_index?: number } = step.content as any;
+
+        if ('correct_answer_index' in content) {
+          delete content.correct_answer_index;
+        }
+
+        return { ...step, content };
+      }
+      return step;
     });
   }
 }
