@@ -10,7 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule,
     JwtModule.register({
       global: true,
-      secret: 'UltraSecretKey12345-67890!@#',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '2d' },
     }),
   ],

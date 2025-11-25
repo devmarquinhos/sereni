@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -16,5 +18,10 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  getProfile(@Req() req: Request & { user: any }) {
+    return req.user;
   }
 }
