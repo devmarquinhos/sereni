@@ -12,7 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ProgressService } from './progress.service';
 
-@UseGuards(AuthGuard('jwt')) // Protege todas as rotas de progresso
+@UseGuards(AuthGuard('jwt'))
 @Controller('progress')
 export class ProgressController {
   constructor(private readonly progressService: ProgressService) {}
