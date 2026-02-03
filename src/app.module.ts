@@ -7,6 +7,7 @@ import { HealthModule } from './health/health.module';
 import { JournalModule } from './journal/journal.module';
 import { ContentModule } from './content/content.module';
 import { ProgressModule } from './progress/progress.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ProgressModule } from './progress/progress.module';
     JournalModule,
     ContentModule,
     ProgressModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
