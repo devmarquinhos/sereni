@@ -8,6 +8,7 @@ import { JournalModule } from './journal/journal.module';
 import { ContentModule } from './content/content.module';
 import { ProgressModule } from './progress/progress.module';
 import { TasksModule } from './tasks/tasks.module';
+import { LessonsModule } from './lessons/lessons.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TasksModule } from './tasks/tasks.module';
     ContentModule,
     ProgressModule,
     TasksModule,
+    LessonsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -37,6 +37,11 @@ export class ContentController {
     return this.contentService.findStepsByLessonId(lessonId);
   }
 
+  @Get('lessons/:id')
+  async getLesson(@Param('id', ParseIntPipe) id: number) {
+    return this.contentService.findLessonWithSteps(id);
+  }
+
   @Post('modules')
   @Roles('ADMIN')
   createModule(@Body() createModuleDto: CreateModuleDto) {

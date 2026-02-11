@@ -102,4 +102,18 @@ export class ContentService {
 
     return steps;
   }
+
+  async findLessonWithSteps(id: number) {
+    const lesson = await this.prisma.lessons.findUnique({
+      where: { id },
+      include: {
+        lesson_steps: {
+          orderBy: { order: 'asc' },
+        },
+      },
+    });
+
+    if (!lesson) throw new NotFoundException('Lição não encontrada');
+    return lesson;
+  }
 }
