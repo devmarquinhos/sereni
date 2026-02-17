@@ -17,6 +17,18 @@ export class ContentService {
       orderBy: {
         id: 'asc',
       },
+      include: {
+        lessons: {
+          select: {
+            id: true,
+            title: true,
+            order: true,
+          },
+          orderBy: {
+            order: 'asc',
+          },
+        },
+      },
     });
   }
 
