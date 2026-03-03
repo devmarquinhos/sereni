@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -11,6 +12,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as nodemailer from 'nodemailer';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -106,5 +108,39 @@ export class AuthService {
     });
 
     return { message: 'Se o e-mail existir, as instruções serão enviadas.' };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { email, code, newPassword } = resetPasswordDto;
+    const user = await this.prisma.users.findUnique({
+      where: { email },
+    });
+
+    if (!user || !user.reset_token || !user.reset_token_expires_at) {
+      throw new BadRequestException(
+        'Solicitação de recuperação inválida ou expirada.',
+      );
+    }
+
+    const isTokenValid = user.reset_token === code;
+    const isTokenExpired = new Date() > user.reset_token_expires_at;
+
+    if (!isTokenValid || isTokenExpired) {
+      throw new BadRequestException('Código inválido ou expirado.');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await this.prisma.users.update({
+      where: { id: user.id },
+      data: {
+        password_hash: hashedPassword,
+        reset_token: null,
+        reset_token_expires_at: null,
+      },
+    });
+
+    return { message: 'Senha alterada com sucesso!' };
   }
 }
