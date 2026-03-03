@@ -16,10 +16,6 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as nodemailer from 'nodemailer';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { setDefaultResultOrder } from 'node:dns';
-
-setDefaultResultOrder('ipv4first');
-
 @Injectable()
 export class AuthService {
   constructor(
