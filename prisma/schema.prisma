@@ -56,14 +56,16 @@ model user_progress {
 }
 
 model users {
-  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email           String            @unique
-  password_hash   String
-  name            String?
-  created_at      DateTime          @default(now()) @db.Timestamptz(6)
-  role            user_role         @default(USER)
-  journal_entries journal_entries[]
-  user_progress   user_progress[]
+  id                             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                          String            @unique
+  password_hash                  String
+  name                           String?
+  reset_token                    String?
+  reset_token_expires_at         DateTime?         @db.Timestamptz(6)
+  created_at                     DateTime          @default(now()) @db.Timestamptz(6)
+  role                           user_role         @default(USER)
+  journal_entries                journal_entries[]
+  user_progress                  user_progress[]
 }
 
 enum lesson_step_type {

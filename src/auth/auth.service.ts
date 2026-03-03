@@ -12,6 +12,8 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import * as nodemailer from 'nodemailer';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -60,5 +62,49 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
 
     return { access_token: token };
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+    const user = await this.prisma.users.findUnique({ where: { email } });
+
+    if (!user) {
+      return { message: 'Se o e-mail existir, as instruções serão enviadas.' };
+    }
+
+    const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const resetTokenExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
+    await this.prisma.users.update({
+      where: { id: user.id },
+      data: {
+        reset_token: resetToken,
+        reset_token_expires_at: resetTokenExpiresAt,
+      },
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Equipe Sereni" <seu-email@gmail.com>',
+      to: user.email,
+      subject: 'Sereni - Código de Recuperação de Senha',
+      html: `
+        <h2>Olá, ${user.name || 'usuário'}!</h2>
+        <p>Você solicitou a recuperação de senha do Sereni.</p>
+        <p>Seu código de verificação é: <strong>${resetToken}</strong></p>
+        <p>Este código é válido por 30 minutos.</p>
+        <br/>
+        <p>Se não foi você, apenas ignore este e-mail.</p>
+      `,
+    });
+
+    return { message: 'Se o e-mail existir, as instruções serão enviadas.' };
   }
 }

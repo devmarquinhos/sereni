@@ -3,6 +3,7 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
@@ -24,5 +25,10 @@ export class AuthController {
   @Get('me')
   getProfile(@Req() req: Request & { user: any }) {
     return req.user;
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto);
   }
 }
