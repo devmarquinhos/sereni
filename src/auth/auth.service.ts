@@ -14,10 +14,12 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtService } from '@nestjs/jwt';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 @Injectable()
 export class AuthService {
+  private resend = new Resend(process.env.RESEND_API_KEY);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -74,8 +76,8 @@ export class AuthService {
     }
 
     const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
-
     const resetTokenExpiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
     await this.prisma.users.update({
       where: { id: user.id },
       data: {
@@ -84,40 +86,26 @@ export class AuthService {
       },
     });
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      pool: true,
-      maxConnections: 1,
-      rateDelta: 1000,
-      rateLimit: 1,
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 5000,
-      tls: {
-        rejectUnauthorized: false,
-        minVersion: 'TLSv1.2',
-      },
-    });
-
-    await transporter.sendMail({
-      from: '"Equipe Sereni" <seu-email@gmail.com>',
-      to: user.email,
-      subject: 'Sereni - Código de Recuperação de Senha',
-      html: `
-        <h2>Olá, ${user.name || 'usuário'}!</h2>
-        <p>Você solicitou a recuperação de senha do Sereni.</p>
-        <p>Seu código de verificação é: <strong>${resetToken}</strong></p>
-        <p>Este código é válido por 30 minutos.</p>
-        <br/>
-        <p>Se não foi você, apenas ignore este e-mail.</p>
-      `,
-    });
+    try {
+      await this.resend.emails.send({
+        from: 'Sereni Support <onboarding@resend.dev>',
+        to: user.email,
+        subject: 'Seu código de recuperação - Sereni',
+        html: `
+          <div style="font-family: sans-serif; color: #333;">
+            <h2>Olá, ${user.name || 'usuário'}!</h2>
+            <p>Você solicitou a recuperação de senha do Sereni.</p>
+            <p>Seu código de verificação é:</p>
+            <h1 style="color: #4F46E5; letter-spacing: 5px;">${resetToken}</h1>
+            <p>Este código é válido por 30 minutos.</p>
+            <hr />
+            <p style="font-size: 12px; color: #666;">Se não foi você, apenas ignore este e-mail.</p>
+          </div>
+        `,
+      });
+    } catch (error) {
+      console.error('Erro ao enviar via Resend:', error);
+    }
 
     return { message: 'Se o e-mail existir, as instruções serão enviadas.' };
   }
