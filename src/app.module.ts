@@ -9,6 +9,7 @@ import { ContentModule } from './content/content.module';
 import { ProgressModule } from './progress/progress.module';
 import { TasksModule } from './tasks/tasks.module';
 import { LessonsModule } from './lessons/lessons.module';
+import { PsychologistsModule } from './psychologists/psychologists.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LessonsModule } from './lessons/lessons.module';
     ProgressModule,
     TasksModule,
     LessonsModule,
+    PsychologistsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
