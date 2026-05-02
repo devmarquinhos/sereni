@@ -3,7 +3,7 @@ import { PsychologistsService } from './psychologists.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('psychologists')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard('jwt'))
 export class PsychologistsController {
   constructor(private readonly psychologistsService: PsychologistsService) {}
 
